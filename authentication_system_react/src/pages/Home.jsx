@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const [userName, setUserName] = useState('');
-
+  const navigate = useNavigate();
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    // const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     console.log("stored user is "+storedUser);
     if (storedUser) {
         try {
@@ -17,11 +18,15 @@ export default function Home() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     window.location.href = '/login';
   };
-
+  const handleUserList=()=>{
+    navigate("/user-list")
+  }
   return (
     <>
       {/* Navbar */}
@@ -35,6 +40,7 @@ export default function Home() {
           >
             Logout
           </button>
+          <button onClick={handleUserList} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow" >View User</button>
         </div>
       </nav>
 

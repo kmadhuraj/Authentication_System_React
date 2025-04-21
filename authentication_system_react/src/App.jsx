@@ -1,33 +1,34 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-} from 'react-router-dom';
-import Register from './pages/Register';
-import Login from './pages/Login';
+} from "react-router-dom";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 // import ForgotPassword from './pages/ForgotPassword';
-import ForgotPassword from './pages/Forgotpassword';
-import Home from './pages/Home';
-import './index.css';
-import ResetPassword from './pages/ResetPassword';
-
+import ForgotPassword from "./pages/Forgotpassword";
+import Home from "./pages/Home";
+import "./index.css";
+import ResetPassword from "./pages/ResetPassword";
+import UserList from "./pages/UserList";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("token")
+  );
 
   // Re-check token on storage change
   useEffect(() => {
     const handleStorageChange = () => {
-      setIsAuthenticated(!!localStorage.getItem('token'));
+      setIsAuthenticated(!!localStorage.getItem("token"));
     };
 
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
- 
   // const isAuthenticated =  !!localStorage.getItem('token');
 
   return (
@@ -44,10 +45,9 @@ const App = () => {
           path="/"
           element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
         />
+        <Route path="/user-list" element={<UserList />} />
       </Routes>
     </Router>
-
-    
   );
 };
 

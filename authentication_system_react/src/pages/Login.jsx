@@ -21,8 +21,10 @@ export default function Login({setAuth}) {
     setError("");
 
     try {
-      const res = await login(form); // Your API call
-      localStorage.setItem("token", res.data.token);
+      const res = await login(form); // API call
+
+      // localStorage.setItem("token", res.data.token); //local storage
+      sessionStorage.setItem("token", res.data.token);//session storage
 
       // Store user info manually becuase i have the user details directly along with token insted of object.
       const user = {
@@ -30,7 +32,9 @@ export default function Login({setAuth}) {
         email: res.data.email,
       };
 
-      localStorage.setItem("user", JSON.stringify(user)); // Optional: Store user
+      // localStorage.setItem("user", JSON.stringify(user)); // Optional: Store user
+      sessionStorage.setItem("user", JSON.stringify(user));// store user 
+
       setAuth(true); // ✅ Update parent App's auth state
       setMessage("Login successful! 🎉");
       navigate("/")
