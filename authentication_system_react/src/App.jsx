@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 // import ForgotPassword from './pages/ForgotPassword';
@@ -13,6 +14,7 @@ import Home from "./pages/Home";
 import "./index.css";
 import ResetPassword from "./pages/ResetPassword";
 import UserList from "./pages/UserList";
+
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -32,7 +34,9 @@ const App = () => {
   // const isAuthenticated =  !!localStorage.getItem('token');
 
   return (
+    // <ToastContainer position="top-right" autoClose={3000} />
     <Router>
+       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route path="/register" element={<Register />} />
         {/* <Route path="/login" element={<Login />} /> */}

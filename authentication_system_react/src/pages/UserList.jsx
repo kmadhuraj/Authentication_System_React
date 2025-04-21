@@ -18,7 +18,7 @@ export default function UserList() {
     }
   };
   const handleBack = () => {
-    navigate('/'); // Change to your home route path
+    navigate('/'); // route to home
   };
 
   return (

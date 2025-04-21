@@ -3,60 +3,98 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/api";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-
-export default function Login({setAuth}) {
+import { ToastContainer, toast } from "react-toastify";
+export default function Login({ setAuth }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
 
+  // const [isSubmitting, setIsSubmitting] = useState(false);//this is for submitting the login form once
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- 
+  const validateForm = () => {
+    if (!form.email) {+
+      toast.error("Email is required");
+      return false;
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      toast.error("Enter a valid email");
+      return false;
+    }
+
+    if (!form.password) {
+      toast.error("Password is required");
+      return false;
+    } else if (form.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      setForm((prev) => ({ ...prev, password: "" }));
+      return false;
+    }else if (!/[A-Z]/.test(form.password)) {
+      toast.error("Password must contain at least one uppercase letter");
+      setForm((prev) => ({ ...prev, password: "" }));
+      return false;
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(form.password)) {
+      toast.error("Password must contain at least one special character (e.g., !@#$%^&*(),.?)");
+      setForm((prev) => ({ ...prev, password: "" }));
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
-    setError("");
+
+    // if (isSubmitting) return;// to know status of //submited or not
+    if (!validateForm()) return;
 
     try {
-      const res = await login(form); // API call
+      // setIsSubmitting(true);
+      const res = await login(form);
 
-      // localStorage.setItem("token", res.data.token); //local storage
-      sessionStorage.setItem("token", res.data.token);//session storage
+      sessionStorage.setItem("token", res.data.token);
 
-      // Store user info manually becuase i have the user details directly along with token insted of object.
       const user = {
         name: res.data.fullName,
         email: res.data.email,
       };
+      sessionStorage.setItem("user", JSON.stringify(user));
 
-      // localStorage.setItem("user", JSON.stringify(user)); // Optional: Store user
-      sessionStorage.setItem("user", JSON.stringify(user));// store user 
-
-      setAuth(true); // ✅ Update parent App's auth state
-      setMessage("Login successful! 🎉");
-      navigate("/")
-    //   setTimeout(() => navigate("/"), 1000); // Delay navigation slightly for message to show
+      setAuth(true);
+      toast.success("Login successful! 🎉");
+      setTimeout(() => navigate("/"), 1500);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Login failed. Please check your credentials."
-      );
+      console.error("Login Error:", err);
+
+      const status = err.response?.status;
+      const message = err.response?.data?.message;
+
+      if (message === "User not found" ||status==404) {
+        toast.error("User not found with this email.");
+        console.log("User not found with this email.");
+        setForm({ email: "", password: "" });
+      } else if (message === "Invalid Password"||status==401) {
+        toast.error("Incorrect password.");
+        console.log("incorrect password.");
+        setForm((prev) => ({ ...prev, password: "" }));
+      } else {
+        toast.error("Login failed. Please check credentials.");
+        setForm({ email: "", password: "" });
+      }
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-blue-100 via-white to-purple-100 px-4">
-      {message && (
+      {/* {message && (
         <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">
           {message}
         </div>
       )}
       {error && (
         <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>
-      )}
+      )} */}
+
+      {/* <ToastContainer /> */}
 
       <form
         onSubmit={handleSubmit}
