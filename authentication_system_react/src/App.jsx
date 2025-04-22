@@ -34,9 +34,9 @@ const App = () => {
   // const isAuthenticated =  !!localStorage.getItem('token');
 
   return (
-    // <ToastContainer position="top-right" autoClose={3000} />
+   
     <Router>
-       <ToastContainer position="top-right" autoClose={3000} />
+       <ToastContainer position="top-right" autoClose={6000} />
       <Routes>
         <Route path="/register" element={<Register />} />
         {/* <Route path="/login" element={<Login />} /> */}

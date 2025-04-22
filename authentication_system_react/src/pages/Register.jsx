@@ -14,8 +14,7 @@ export default function Register() {
     department: "",
     phoneNumber: "",
   });
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -197,17 +196,16 @@ export default function Register() {
   console.log(form);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // setMessage("");
-    // setError("");
+  
 
     if (!validateForm()) return; //form validation
     try {
       await register(form);
-      // setMessage("🎉 Registration successful! Redirecting to login...");
       toast.success("🎉 Registration successful! Redirecting to login...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       const errorMsg = err.response?.data?.message;
+      console.log("message "+message);
       if (errorMsg?.includes("email")) {
         toast.error("Email already exists. Please use a different one.");
       } else if (errorMsg?.includes("employeeId")) {
@@ -218,16 +216,16 @@ export default function Register() {
         );
       }
 
-      setForm({
-        fullname: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        employeeId: "",
-        jobTitle: "",
-        department: "",
-        phoneNumber: "",
-      });
+      // setForm({
+      //   fullname: "",
+      //   email: "",
+      //   password: "",
+      //   confirmPassword: "",
+      //   employeeId: "",
+      //   jobTitle: "",
+      //   department: "",
+      //   phoneNumber: "",
+      // });
     }
   };
   // work with registwer user
@@ -246,17 +244,7 @@ export default function Register() {
           <p className="text-sm text-gray-500">Join us to explore more!</p>
         </div>
 
-        {message && (
-          <div className="bg-green-100 text-green-700 px-4 py-2 rounded mb-4 text-center text-sm font-medium">
-            {message}
-          </div>
-        )}
-        {error && (
-          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm font-medium">
-            {error}
-          </div>
-        )}
-
+      
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -276,15 +264,7 @@ export default function Register() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
             required
           />
-          {/* <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            required
-          /> */}
+          
           <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}

@@ -13,12 +13,12 @@
 //     try {
 //       const res = await forgotPassword({ email });
 //       setMessage(res.data.message);
-  
+
 //       // Extract email and token from resetLink
 //       const resetLink = new URL(res.data.resetLink);
 //       const emailParam = resetLink.searchParams.get("email");
 //       const tokenParam = resetLink.searchParams.get("token");
-  
+
 //       // Navigate to frontend reset-password route with token and email
 //       navigate(`/reset-password?email=${encodeURIComponent(emailParam)}&token=${encodeURIComponent(tokenParam)}`);
 //     } catch (err) {
@@ -26,9 +26,6 @@
 //       setMessage("Failed to send reset email. Please try again.");
 //     }
 //   };
-  
-
-
 
 //   return (
 //     <>
@@ -53,23 +50,20 @@
 //       </form>
 //     </div> */}
 
-
 //     </>
 //   )
 // }
 
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
-// import { useToast } from "@/components/ui/use-toast";
 import { forgotPassword } from "../services/api"; // your API function
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const { toast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -78,25 +72,30 @@ const ForgotPassword = () => {
     try {
       const res = await forgotPassword({ email });
       const { message, resetLink } = res.data;
-      toast.success("Reset link sent!");
-      // toast({
-      //   title: "Reset link sent!",
-      //   description: message || "Check your email for password reset instructions.",
-      // });
 
-      const url = new URL(resetLink);
-      const emailParam = url.searchParams.get("email");
-      const tokenParam = url.searchParams.get("token");
+      // Check if response has expected success structure
+      if (res.data && res.data.success) {
+        const { resetLink } = res.data;
 
-      navigate(`/reset-password?email=${encodeURIComponent(emailParam)}&token=${encodeURIComponent(tokenParam)}`);
+        toast.success("Reset link sent to registered email");
+
+        const url = new URL(resetLink);
+        const emailParam = url.searchParams.get("email");
+        const tokenParam = url.searchParams.get("token");
+
+        navigate(
+          `/reset-password?email=${encodeURIComponent(
+            emailParam
+          )}&token=${encodeURIComponent(tokenParam)}`
+        );
+      } else {
+        toast.error(
+          res.data?.message || "Failed to send reset email. Please try again."
+        );
+      }
     } catch (err) {
       console.error("Failed to send forgot password request", err);
-      toast.error("Something went wrong,Failed to send reset email. Please try again.");
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to send reset email. Please try again.",
-      //   variant: "destructive",
-      // });
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -108,9 +107,12 @@ const ForgotPassword = () => {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">Forgot Password?</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Forgot Password?
+            </h1>
             <p className="text-gray-500">
-              No worries! Enter your email and we'll send you reset instructions.
+              No worries! Enter your email and we'll send you reset
+              instructions.
             </p>
           </div>
 
@@ -136,9 +138,25 @@ const ForgotPassword = () => {
             >
               {isLoading ? (
                 <span className="inline-flex items-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Sending...
                 </span>
@@ -163,4 +181,3 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
-
