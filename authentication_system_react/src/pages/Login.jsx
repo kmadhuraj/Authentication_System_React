@@ -25,19 +25,25 @@ export default function Login({ setAuth }) {
     if (!form.password) {
       toast.error("Password is required");
       return false;
-    } else if (form.password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      setForm((prev) => ({ ...prev, password: "" }));
-      return false;
-    }else if (!/[A-Z]/.test(form.password)) {
-      toast.error("Password must contain at least one uppercase letter");
-      setForm((prev) => ({ ...prev, password: "" }));
-      return false;
-    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(form.password)) {
-      toast.error("Password must contain at least one special character (e.g., !@#$%^&*(),.?)");
-      setForm((prev) => ({ ...prev, password: "" }));
-      return false;
-    }
+    } 
+    // else if (form.password.length < 6) {
+    //   toast.error("Password must be at least 6 characters");
+    //   setForm((prev) => ({ ...prev, password: "" }));
+    //   return false;
+    // }
+    
+    // else if (!/[A-Z]/.test(form.password)) {
+    //   toast.error("Password must contain at least one uppercase letter");
+    //   setForm((prev) => ({ ...prev, password: "" }));
+    //   return false;
+    // } 
+    
+    // else if (!/[!@#$%^&*(),.?":{}|<>]/.test(form.password)) {
+    //   toast.error("Password must contain at least one special character (e.g., !@#$%^&*(),.?)");
+    //   setForm((prev) => ({ ...prev, password: "" }));
+    //   return false;
+    // }
+
     return true;
   };
 
@@ -52,11 +58,15 @@ export default function Login({ setAuth }) {
       const res = await login(form);
 
       sessionStorage.setItem("token", res.data.token);
+      console.log("user data is " +res.data);
 
       const user = {
         name: res.data.fullName,
         email: res.data.email,
+
+
       };
+
       sessionStorage.setItem("user", JSON.stringify(user));
 
       setAuth(true);
@@ -67,7 +77,6 @@ export default function Login({ setAuth }) {
 
       const status = err.response?.status;
       const message = err.response?.data?.message;
-
       if (message === "User not found" ||status==404) {
         toast.error("User not found with this email.");
         console.log("User not found with this email.");

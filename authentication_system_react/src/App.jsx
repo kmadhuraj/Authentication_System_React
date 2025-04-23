@@ -14,8 +14,8 @@ import Home from "./pages/Home";
 import "./index.css";
 import ResetPassword from "./pages/ResetPassword";
 import UserList from "./pages/UserList";
-
-
+import UserProfileMenu from './components/drop_down_panel/UserProfileMenu';
+import Profile from "./pages/Profile";
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token")
@@ -44,12 +44,13 @@ const App = () => {
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-
-        <Route
+        <Route path="/" element={<Home />} />
+        {/* <Route
           path="/"
           element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
-        />
+        /> */}
         <Route path="/user-list" element={<UserList />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

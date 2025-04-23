@@ -76,9 +76,6 @@ const ForgotPassword = () => {
       // Check if response has expected success structure
       if (res.data && res.data.success) {
         const { resetLink } = res.data;
-
-        toast.success("Reset link sent to registered email");
-
         const url = new URL(resetLink);
         const emailParam = url.searchParams.get("email");
         const tokenParam = url.searchParams.get("token");
@@ -88,10 +85,10 @@ const ForgotPassword = () => {
             emailParam
           )}&token=${encodeURIComponent(tokenParam)}`
         );
-      } else {
-        toast.error(
-          res.data?.message || "Failed to send reset email. Please try again."
-        );
+        
+      } 
+      else {
+        toast.success("Reset link sent to registered email");
       }
     } catch (err) {
       console.error("Failed to send forgot password request", err);
